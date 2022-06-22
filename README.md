@@ -15,3 +15,41 @@ Each edition has its own branch, named `editions/[EDITION]`. The default branch 
 
 <img width="1387" alt="スクリーンショット_2022_06_21_22_03" src="https://user-images.githubusercontent.com/47273077/174805801-4ff35fa1-0078-4750-bdb7-66183cdce1ef.png">
 
+## What would happen if you did not add a completed or error event, and also didn’t add the subscription to disposeBag? 
+```swift
+example(of: "create") {
+  enum MyError: Error {
+    case anError
+  }
+
+  let disposeBag = DisposeBag()
+
+  Observable<String>.create { observer in
+    // 1
+    observer.onNext("1")
+
+//    observer.onError(MyError.anError)
+
+    // 2
+//    observer.onCompleted()
+
+    // 3
+    observer.onNext("?")
+
+    // 4
+    return Disposables.create()
+  }
+  .subscribe(
+    onNext: { print($0) },
+    onError: { print($0) },
+    onCompleted: { print("Completed") },
+    onDisposed: { print("Disposed") }
+  )
+//  .disposed(by: disposeBag)
+}
+
+```
+
+<img width="425" alt="スクリーンショット_2022_06_22_21_52" src="https://user-images.githubusercontent.com/47273077/175033720-8efa31ab-c510-4a05-8944-7ab048a0dd72.png">
+
+
